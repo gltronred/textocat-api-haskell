@@ -1,11 +1,17 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Network.Textocat.Simple ( getBatchID
-                               , entityQueue
-                               , entityRetrieve
-                               , entitySearch
-                               , queueRetrieve
-                               ) where
+module Network.Textocat.Simple (
+    -- * Entity API calls
+    entityQueue
+  , entityRequest
+  , entityRetrieve
+  , entitySearch
+    -- * Status API call
+  , serviceStatus
+    -- * Helper functions
+  , waitForFinished
+  , queueRetrieve
+  ) where
 
 import Data.Textocat
 import Data.Textocat.Internal

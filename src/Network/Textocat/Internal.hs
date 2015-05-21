@@ -7,7 +7,6 @@ import           Data.Textocat.Internal
 import           Control.Monad.Trans.Resource
 import           Data.Aeson
 import qualified Data.ByteString as B
-import qualified Data.ByteString.Char8 as S
 import qualified Data.ByteString.Lazy.Char8 as BS
 import           Data.Char
 import           Data.Conduit
@@ -15,19 +14,6 @@ import           Data.Maybe
 import qualified Data.Text as T
 import           Network.HTTP.Conduit
 import           Network.HTTP.Types
-
-apiKey = "f9e1c6d38ef32f60bdcbd89326b502c6"
-
--- TODO: ask to fix bug
-fixSpaces :: BS.ByteString -> BS.ByteString
-fixSpaces = go True
-  where go flag str = case BS.uncons str of
-          Nothing -> BS.empty
-          Just (b,bs) -> if flag && isSpace b
-                         then go flag bs
-                         else if b == '"'
-                              then b `BS.cons` go (not flag) bs
-                              else b `BS.cons` go flag bs
 
 makeConn :: (FromJSON b)
          => Config          -- ^ API config
@@ -56,9 +42,9 @@ makeConn (Config apiKey urlHead) urlTail mtd param infos = do
     print req
     resp <- withManager $ httpLbs req
     print $ responseStatus resp
-    -- TODO: insert response status here
-    print $ fixSpaces $ responseBody resp
-    return $ eitherDecode $ fixSpaces $ responseBody resp
+    -- TODO: insert response status handling here
+    BS.putStrLn $ responseBody resp
+    return $ eitherDecode $ responseBody resp
 
 checkServiceStatus :: Config -> IO ServiceStatus
 checkServiceStatus (Config apiKey urlHead) = do
