@@ -51,7 +51,7 @@ import Data.ByteString (ByteString)
 -- | Creates a @Config@ value from API key
 mkConfig :: ByteString -- ^ API key
          -> Config
-mkConfig key = Config key "http://api.textocat.com/api"
+mkConfig key = Config key "http://api.textocat.com"
 
 -- | Get batch identifier from status returned by API
 getBatchID :: BatchStatus -- ^ Status as returned by API

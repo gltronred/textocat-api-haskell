@@ -35,7 +35,7 @@ entityRetrieve :: Config -> [BatchID] -> IO (Either ErrorMsg Batch)
 entityRetrieve cfg = makeConn cfg "/entity/retrieve" GET "batch_id" . map fromBatchId
 
 entitySearch :: Config -> Text -> IO (Either ErrorMsg SearchResult)
-entitySearch = undefined
+entitySearch cfg = makeConn cfg "/entity/search" GET "search_query" . pure . E.encodeUtf8
 
 -- * Helpers
 
@@ -62,5 +62,5 @@ queueRetrieve cfg docs = do
       fmap (either (const []) (map te_entities . ta_documents)) $ entityRetrieve cfg [id]
 
 serviceStatus :: Config -> IO ServiceStatus
-serviceStatus cfg = undefined
+serviceStatus cfg = checkServiceStatus cfg
 

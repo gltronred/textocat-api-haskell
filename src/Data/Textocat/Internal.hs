@@ -39,11 +39,11 @@ newtype BatchID = BatchID
     } deriving (Eq,Show,Read)
 
 instance FromJSON BatchID where
-  parseJSON (String t) = return $ read $ T.unpack t
+  parseJSON (String t) = return $ BatchID t
   parseJSON _ = error "Expected string while reading status"
 
 instance ToJSON BatchID where
-  toJSON x = String $ T.pack $ show x
+  toJSON (BatchID x) = String x
 
 -- | States of batch processing
 data BatchState
@@ -87,13 +87,13 @@ instance ToJSON DocumentState where
 
 -- | Entity category
 data Category
-    = Person
-    | Organization
+    = PERSON
+    | ORGANIZATION
     | GPE
-    | Location
-    | Facility
-    | Time
-    | Money
+    | LOCATION
+    | FACILITY
+    | TIME
+    | MONEY
     deriving (Eq,Ord,Show,Read)
 
 instance FromJSON Category where
@@ -147,6 +147,14 @@ data SearchResult = SearchResult
     { sr_searchQuery :: Text
     , sr_documents :: [AnnotatedDocument]
     } deriving (Eq,Show)
+
+$(deriveJSON
+      (defaultOptions
+       { fieldLabelModifier = drop 3
+       , constructorTagModifier = map toLower
+       , omitNothingFields = True
+       })
+      ''SearchResult)
 
 data ServiceStatus
     = ServiceOK

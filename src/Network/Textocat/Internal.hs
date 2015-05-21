@@ -59,3 +59,16 @@ makeConn (Config apiKey urlHead) urlTail mtd param infos = do
     -- TODO: insert response status here
     print $ fixSpaces $ responseBody resp
     return $ eitherDecode $ fixSpaces $ responseBody resp
+
+checkServiceStatus :: Config -> IO ServiceStatus
+checkServiceStatus (Config apiKey urlHead) = do
+  req' <- parseUrl $ urlHead ++ "/status"
+  let params = [("auth_token", Just apiKey)]
+      req = setQueryString params $ req' { checkStatus = \_ _ _ -> Nothing
+                                         , method = renderStdMethod GET
+                                         , requestHeaders = [("Content-Type", "application/json")]}
+  resp <- withManager $ httpLbs req
+  return $ case statusCode $ responseStatus resp of
+    200 -> ServiceOK
+    503 -> ServiceUnavailable
+
