@@ -9,8 +9,7 @@ module Data.Textocat (
   , mkDocument
   , mkTaggedDocument
   , setTag
-  , getText
-  , getTag
+  , delTag
     -- * Batch
   , BatchID
   , BatchState (..)
@@ -25,7 +24,7 @@ module Data.Textocat (
     -- * Annotated document
   , AnnotatedDocument
   , getDocumentState
-  , getTag'
+  , getDocumentTag
   , getEntities
     -- ** Document state
   , DocumentState (..)
@@ -41,52 +40,108 @@ module Data.Textocat (
   , getSearchQuery
   , getFoundDocuments
     -- * Service status
-  , ServiceStatus
+  , ServiceStatus (..)
   ) where
 
 import Data.Textocat.Internal
 
+import Control.Arrow
 import Data.ByteString (ByteString)
+import Data.Text (Text)
 
 -- | Creates a @Config@ value from API key
 mkConfig :: ByteString -- ^ API key
          -> Config
 mkConfig key = Config key "http://api.textocat.com"
 
--- | Get batch identifier from status returned by API
+-- | Get batch identifier @BatchID@ from status returned by API
 getBatchID :: BatchStatus -- ^ Status as returned by API
            -> BatchID
-getBatchID = undefined
+getBatchID = BatchID . bs_batchId
 
-mkDocument = undefined
+-- | Create a @Document@ without tag from text
+mkDocument :: Text -- ^ Text
+           -> Document
+mkDocument t = Document t Nothing
 
-mkTaggedDocument = undefined
+-- | Create a tagged @Document@ from text and tag
+mkTaggedDocument :: Text -- ^ Text
+                 -> Text -- ^ Tag
+                 -> Document
+mkTaggedDocument text tag = Document text $ Just tag
 
-setTag = undefined
+-- | Replace or set a tag
+setTag :: Text -- ^ Tag 
+       -> Document -- ^ Document
+       -> Document
+setTag tag doc = doc { d_tag = Just tag }
 
-getText = undefined
+-- | Delete tag
+delTag :: Document -> Document
+delTag doc = doc { d_tag = Nothing }
 
-getTag = undefined
+-- Following functions are not needed, IMHO
+--
+-- -- | Get text from document
+-- getText :: Document -> Text
+-- getText = d_text
 
-getBatchState = undefined
+-- -- | Get tag from document
+-- getTag :: Document -> Text
+-- getTag = d_tag
 
-getBatchIds = undefined
+-- | Get batch status from request call result
+getBatchState :: BatchStatus -- ^ Request call result
+              -> BatchState
+getBatchState = bs_status
 
-getDocuments = undefined
+-- | Get batch ids from retrieve call result
+getBatchIds :: Batch -- ^ Batch
+            -> [BatchID]
+getBatchIds = b_batchIds
 
-getDocumentState = undefined
+-- | Get annotated documents from retrieve call result
+getDocuments :: Batch -- ^ Batch
+             -> [AnnotatedDocument]
+getDocuments = b_documents
 
-getTag' = undefined
+-- | Get annotated document state
+getDocumentState :: AnnotatedDocument -- ^ Document
+                 -> DocumentState
+getDocumentState = ad_status
 
-getEntities = undefined
+-- | Get annotated document tag
+getDocumentTag :: AnnotatedDocument -- ^ Document
+               -> Maybe Text
+getDocumentTag = ad_tag
 
-getSpan = undefined
+-- | Get entities from annotated document
+getEntities :: AnnotatedDocument -- ^ Document
+            -> [Entity]
+getEntities = ad_entities
 
-getOffsets = undefined
+-- | Get entity span
+getSpan :: Entity -- ^ Entity
+        -> Text
+getSpan = e_span
 
-getCategory = undefined
+-- | Get pair of start and end offsets
+getOffsets :: Entity -- ^ Entity
+           -> (Int, Int)
+getOffsets = e_beginOffset &&& e_endOffset
 
-getSearchQuery = undefined
+-- | Get entity category
+getCategory :: Entity -- ^ Entity
+            -> Category
+getCategory = e_category
 
-getFoundDocuments = undefined
+-- | Get search query
+getSearchQuery :: SearchResult -- ^ Search call result
+               -> Text
+getSearchQuery = sr_searchQuery
+
+-- | Get found documents
+getFoundDocuments :: SearchResult -- ^ Search call result
+                  -> [AnnotatedDocument]
+getFoundDocuments = sr_documents
 
