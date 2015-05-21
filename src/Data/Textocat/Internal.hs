@@ -21,13 +21,13 @@ data Config = Config
 
 -- | Document sent for analysis
 data Document = Document
-    { td_text :: Text -- ^ Text (less than 100 KB)
-    , td_tag :: Maybe Text -- ^ Tag (say, user identifier of document)
+    { d_text :: Text -- ^ Text (less than 100 KB)
+    , d_tag :: Maybe Text -- ^ Tag (say, user identifier of document)
     } deriving (Eq,Show)
 
 $(deriveJSON
       (defaultOptions
-       { fieldLabelModifier = drop 3
+       { fieldLabelModifier = drop 2
        , constructorTagModifier = map toLower
        , omitNothingFields = True
        })
@@ -35,7 +35,7 @@ $(deriveJSON
 
 -- | Batch identifier (you get it after submitting documents)
 newtype BatchID = BatchID
-    { tr_batch_id :: Text
+    { batch_id :: Text
     } deriving (Eq,Show,Read)
 
 instance FromJSON BatchID where
@@ -60,8 +60,8 @@ instance ToJSON BatchState where
 
 -- | Status of batch
 data BatchStatus = BatchStatus
-    { ts_batchId :: Text -- ^ Batch ID
-    , ts_status :: BatchState -- ^ Batch status
+    { bs_batchId :: Text -- ^ Batch ID
+    , bs_status :: BatchState -- ^ Batch status
     } deriving (Eq,Show)
 
 $(deriveJSON
@@ -104,23 +104,23 @@ instance ToJSON Category where
   toJSON x = String $ T.pack $ show x
 
 data Entity = Entity
-    { te_span :: Text
-    , te_beginOffset :: Int
-    , te_endOffset :: Int
-    , te_category :: Category
+    { e_span :: Text
+    , e_beginOffset :: Int
+    , e_endOffset :: Int
+    , e_category :: Category
     } deriving (Eq,Show)
 
 $(deriveJSON
       (defaultOptions
-       { fieldLabelModifier = drop 3
+       { fieldLabelModifier = drop 2
        , constructorTagModifier = map toLower
        })
       ''Entity)
 
 data AnnotatedDocument = AnnotatedDocument
-    { te_status :: DocumentState
-    , te_tag :: Maybe Text
-    , te_entities :: [Entity]
+    { ad_status :: DocumentState
+    , ad_tag :: Maybe Text
+    , ad_entities :: [Entity]
     } deriving (Eq,Show)
 
 $(deriveJSON
@@ -132,13 +132,13 @@ $(deriveJSON
       ''AnnotatedDocument)
 
 data Batch = Batch
-    { ta_batchIds :: [BatchID]
-    , ta_documents :: [AnnotatedDocument]
+    { b_batchIds :: [BatchID]
+    , b_documents :: [AnnotatedDocument]
     } deriving (Eq,Show)
 
 $(deriveJSON
       (defaultOptions
-       { fieldLabelModifier = drop 3
+       { fieldLabelModifier = drop 2
        , constructorTagModifier = map toLower
        })
       ''Batch)

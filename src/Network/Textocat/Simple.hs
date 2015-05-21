@@ -23,7 +23,7 @@ import           Network.HTTP.Types
 -- * Simple API requests
 
 fromBatchId :: BatchID -> B.ByteString
-fromBatchId = E.encodeUtf8 . tr_batch_id
+fromBatchId = E.encodeUtf8 . batch_id
 
 entityQueue :: Config -> [Document] -> IO (Either ErrorMsg BatchStatus)
 entityQueue cfg = makeConn cfg "/entity/queue" POST "body" . pure . BS.toStrict . encode
@@ -44,7 +44,7 @@ waitForFinished cfg batch = do
   mtres <- entityRequest cfg batch
   case mtres of
     Left err -> error $ "Something went wrong: " ++ err
-    Right tres -> let status = ts_status tres
+    Right tres -> let status = bs_status tres
                   in if status == FINISHED
                      then return ()
                      else do
@@ -59,7 +59,7 @@ queueRetrieve cfg docs = do
     Right batch -> do
       let id = getBatchID batch
       waitForFinished cfg id
-      fmap (either (const []) (map te_entities . ta_documents)) $ entityRetrieve cfg [id]
+      fmap (either (const []) (map ad_entities . b_documents)) $ entityRetrieve cfg [id]
 
 serviceStatus :: Config -> IO ServiceStatus
 serviceStatus cfg = checkServiceStatus cfg
