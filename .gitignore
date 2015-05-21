@@ -1,0 +1,10 @@
+# temporary files
+*~
+*.bak
+
+# cabal sandbox
+cabal.sandbox.config
+.cabal-sandbox/
+
+# dist
+dist/
