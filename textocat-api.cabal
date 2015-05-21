@@ -10,7 +10,7 @@ license:             Apache-2.0
 license-file:        LICENSE
 author:              Mansur Ziatdinov
 maintainer:          mz@fosslabs.ru
--- copyright:           
+copyright:           Copyright 2015 Mansur Ziatdinov
 -- category:            
 build-type:          Simple
 -- extra-source-files:  
@@ -38,9 +38,19 @@ library
 
 test-suite simple-io-test
   type:                exitcode-stdio-1.0
-  hs-source-dirs:      test
+  hs-source-dirs:      src, test
   build-depends:       base >=4.7 && <4.8
                      , textocat-api
+                     , tasty >=0.10 && <0.11
+                     , tasty-hunit >=0.9 && <0.10
+                     , aeson >=0.8 && <0.9
+                     , bytestring >=0.10 && <0.11
+                     , conduit >=1.2 && <1.3
+                     , http-conduit >=2.1 && <2.2
+                     , http-types >=0.8 && <0.9
+                     , resourcet >=1.1 && <1.2
+                     , text >=1.2 && <1.3
+                     , transformers >=0.4 && <0.5
   main-is:             SimpleIOTest.hs
   default-language:    Haskell2010
   
