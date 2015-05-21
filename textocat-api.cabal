@@ -17,9 +17,30 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
-  -- exposed-modules:     
-  -- other-modules:       
+  exposed-modules:     Data.Textocat
+                     , Network.Textocat
+                     , Network.Textocat.Simple
+                     , Network.Textocat.Monadic
+  other-modules:       Data.Textocat.Internal
+                     , Network.Textocat.Internal
   -- other-extensions:    
   build-depends:       base >=4.7 && <4.8
+                     , aeson >=0.8 && <0.9
+                     , bytestring >=0.10 && <0.11
+                     , conduit >=1.2 && <1.3
+                     , http-conduit >=2.1 && <2.2
+                     , http-types >=0.8 && <0.9
+                     , resourcet >=1.1 && <1.2
+                     , text >=1.2 && <1.3
+                     , transformers >=0.4 && <0.5
   hs-source-dirs:      src
   default-language:    Haskell2010
+
+test-suite simple-io-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  build-depends:       base >=4.7 && <4.8
+                     , textocat-api
+  main-is:             SimpleIOTest.hs
+  default-language:    Haskell2010
+  
