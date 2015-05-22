@@ -26,26 +26,39 @@ import           Data.Text (Text)
 import qualified Data.Text.Encoding as E
 import           Network.HTTP.Types
 
--- * Simple API requests
-
 fromBatchId :: BatchID -> B.ByteString
 fromBatchId = E.encodeUtf8 . batch_id
 
-entityQueue :: Config -> [Document] -> IO (Either ErrorMsg BatchStatus)
+-- | Queue documents
+entityQueue :: Config -- ^ @Config@
+            -> [Document] -- ^ List of documents, should be less than 50
+            -> IO (Either ErrorMsg BatchStatus)
 entityQueue cfg = makeConn cfg "/entity/queue" POST "body" . pure . BS.toStrict . encode
 
-entityRequest :: Config -> BatchID -> IO (Either ErrorMsg BatchStatus)
+-- | Request status of batch
+entityRequest :: Config -- ^ @Config@
+              -> BatchID -- ^ Batch ID to request
+              -> IO (Either ErrorMsg BatchStatus)
 entityRequest cfg = makeConn cfg "/entity/request" GET "batch_id" . pure . fromBatchId
 
-entityRetrieve :: Config -> [BatchID] -> IO (Either ErrorMsg Batch)
+-- | Retrieve documents from finished batches
+entityRetrieve :: Config -- ^ @Config@
+               -> [BatchID] -- ^ Batches to retrieve
+               -> IO (Either ErrorMsg Batch)
 entityRetrieve cfg = makeConn cfg "/entity/retrieve" GET "batch_id" . map fromBatchId
 
-entitySearch :: Config -> Text -> IO (Either ErrorMsg SearchResult)
+-- | Search text in all documents in collection
+entitySearch :: Config -- ^ @Config@
+             -> Text -- ^ Search query
+             -> IO (Either ErrorMsg SearchResult)
 entitySearch cfg = makeConn cfg "/entity/search" GET "search_query" . pure . E.encodeUtf8
 
 -- * Helpers
 
-waitForFinished :: Config -> BatchID -> IO ()
+-- | Blocks until batch is finished. Repeats every 0.1 sec.
+waitForFinished :: Config -- ^ Config
+                -> BatchID -- ^ Batch
+                -> IO ()
 waitForFinished cfg batch = do
   mtres <- entityRequest cfg batch
   case mtres of
@@ -57,7 +70,10 @@ waitForFinished cfg batch = do
                        threadDelay 100000
                        waitForFinished cfg batch
 
-queueRetrieve :: Config -> [Document] -> IO [[Entity]]
+-- | Queue documents and wait until they are finished. Returns all entities
+queueRetrieve :: Config -- ^ Config
+              -> [Document] -- ^ Documents
+              -> IO [[Entity]]
 queueRetrieve cfg docs = do
   ebatch <- entityQueue cfg docs
   case ebatch of
@@ -67,6 +83,8 @@ queueRetrieve cfg docs = do
       waitForFinished cfg id
       fmap (either (const []) (map ad_entities . b_documents)) $ entityRetrieve cfg [id]
 
-serviceStatus :: Config -> IO ServiceStatus
+-- | Check status of service
+serviceStatus :: Config -- ^ Config
+              -> IO ServiceStatus
 serviceStatus cfg = checkServiceStatus cfg
 
