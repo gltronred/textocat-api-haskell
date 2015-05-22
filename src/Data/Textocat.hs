@@ -80,16 +80,6 @@ setTag tag doc = doc { d_tag = Just tag }
 delTag :: Document -> Document
 delTag doc = doc { d_tag = Nothing }
 
--- Following functions are not needed, IMHO
---
--- -- | Get text from document
--- getText :: Document -> Text
--- getText = d_text
-
--- -- | Get tag from document
--- getTag :: Document -> Text
--- getTag = d_tag
-
 -- | Get batch status from request call result
 getBatchState :: BatchStatus -- ^ Request call result
               -> BatchState
