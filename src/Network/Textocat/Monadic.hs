@@ -2,17 +2,21 @@
 {-# LANGUAGE DeriveFunctor #-}
 
 module Network.Textocat.Monadic
-       ( TextocatM
+       ( -- * Monad wrappers
+         TextocatM
        , Textocat
+         -- * Executing
        , runTextocatM
        , runTextocat
-       , queue
-       , queue1
-       , force
+         -- * API operations
        , request
        , retrieve
        , search
        , status
+         -- * Queueing
+       , queue
+       , queue1
+       , force
        ) where
 
 import Data.Textocat
