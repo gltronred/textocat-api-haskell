@@ -4,14 +4,16 @@
 name:                textocat-api
 version:             0.1.0.0
 synopsis:            Unofficial Haskell SDK for Textocat API -- http://textocat.com
--- description:         
+description:         Unofficial Haskell SDK for Textocat API -- http://textocat.com
+                     .
+                     Textocat is "catalyst of text analytics". It focuses on Russian texts, mainly news
 homepage:            https://github.com/gltronred/textocat-api-haskell
 license:             Apache-2.0
 license-file:        LICENSE
 author:              Mansur Ziatdinov
 maintainer:          mz@fosslabs.ru
 copyright:           Copyright 2015 Mansur Ziatdinov
--- category:            
+category:            API, Network, Natural Language Processing
 build-type:          Simple
 -- extra-source-files:  
 cabal-version:       >=1.10
@@ -21,8 +23,9 @@ library
                      , Network.Textocat
                      , Network.Textocat.Simple
                      , Network.Textocat.Monadic
-  other-modules:       Data.Textocat.Internal
+                     , Data.Textocat.Internal
                      , Network.Textocat.Internal
+  -- other-modules:
   -- other-extensions:    
   build-depends:       base >=4.7 && <4.8
                      , aeson >=0.8 && <0.9
@@ -53,4 +56,13 @@ test-suite simple-io-test
                      , transformers >=0.4 && <0.5
   main-is:             SimpleIOTest.hs
   default-language:    Haskell2010
-  
+
+source-repository head
+  type:                git
+  location:            https://github.com/gltronred/textocat-api-haskell
+
+source-repository this
+  type:                git
+  location:            git://github.com/gltronred/textocat-api-haskell.git
+  tag:                 0.1
+      

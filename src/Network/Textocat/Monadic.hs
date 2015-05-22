@@ -1,4 +1,19 @@
-{-# LANGUAGE RankNTypes #-}
+{- |
+Module      : Network.Textocat.Monadic
+Description : Monadic binding for Textocat API
+Copyright   : (c) Mansur Ziatdinov, 2014--2015
+License     : Apache-2.0
+Maintainer  : mz+textocat-api@fosslabs.ru
+Stability   : experimental
+Portability : POSIX
+
+There are two kind of functions in this module. Functions that have apostrophe
+in their names send data to server every time you call them. Functions without
+them call server only if necessary (e.g. you requested it)
+
+This monadic interface is experimental. If you know how to improve it, please
+contact author
+-}
 {-# LANGUAGE DeriveFunctor #-}
 
 module Network.Textocat.Monadic

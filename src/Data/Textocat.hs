@@ -1,3 +1,19 @@
+{- |
+Module      : Data.Textocat
+Description : Types used in Textocat API
+Copyright   : (c) Mansur Ziatdinov, 2014--2015
+License     : Apache-2.0
+Maintainer  : mz+textocat-api@fosslabs.ru
+Stability   : experimental
+Portability : POSIX
+
+Almost all types represent JSON which is returned from API. 'Config' contains API key, 'ErrorMsg' is simple String with error description. 'ServiceStatus' represent service status
+
+This module uses an <https://www.fpcomplete.com/user/commercial/content/designing-apis-for-extensibility approach to API design> described by Michael Snoyman.
+
+If you really need implementation of all these types, use "Data.Textocat.Internal" module at your own risk
+-}
+
 module Data.Textocat (
     -- * API configuration
     Config

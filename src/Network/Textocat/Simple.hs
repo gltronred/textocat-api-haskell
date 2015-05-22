@@ -1,3 +1,19 @@
+{- |
+Module      : Network.Textocat.Simple
+Description : Simple binding for Textocat API
+Copyright   : (c) Mansur Ziatdinov, 2014--2015
+License     : Apache-2.0
+Maintainer  : mz+textocat-api@fosslabs.ru
+Stability   : experimental
+Portability : POSIX
+
+Functions in this module are in one-to-one correspondence with API calls.
+However, there are two helpers which can help in your application
+
+You have to pass 'Config' everywhere. If you think that it is inconvenient,
+you can use "Network.Textocat.Monadic" instead. However, monadic interface
+is experimental
+-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Network.Textocat.Simple (
