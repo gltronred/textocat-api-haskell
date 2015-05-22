@@ -15,6 +15,7 @@ import qualified Data.Text as T
 import           Network.HTTP.Conduit
 import           Network.HTTP.Types
 
+-- | Make call to API endpoint, send parameter and get answer
 makeConn :: (FromJSON b)
          => Config          -- ^ API config
          -> String          -- ^ URL endpoint
@@ -46,7 +47,9 @@ makeConn (Config apiKey urlHead) urlTail mtd param infos = do
     BS.putStrLn $ responseBody resp
     return $ eitherDecode $ responseBody resp
 
-checkServiceStatus :: Config -> IO ServiceStatus
+-- | Check service status. We cannot do it usual way by calling 'makeConn'
+checkServiceStatus :: Config -- ^ Config
+                   -> IO ServiceStatus
 checkServiceStatus (Config apiKey urlHead) = do
   req' <- parseUrl $ urlHead ++ "/status"
   let params = [("auth_token", Just apiKey)]

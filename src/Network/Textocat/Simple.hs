@@ -26,11 +26,13 @@ import           Data.Text (Text)
 import qualified Data.Text.Encoding as E
 import           Network.HTTP.Types
 
-fromBatchId :: BatchID -> B.ByteString
+-- | Convert 'BatchID' to ByteString
+fromBatchId :: BatchID -- ^ BatchID
+            -> B.ByteString
 fromBatchId = E.encodeUtf8 . batch_id
 
 -- | Queue documents
-entityQueue :: Config -- ^ @Config@
+entityQueue :: Config -- ^ 'Config'
             -> [Document] -- ^ List of documents, should be less than 50
             -> IO (Either ErrorMsg BatchStatus)
 entityQueue cfg = makeConn cfg "/entity/queue" POST "body" . pure . BS.toStrict . encode
